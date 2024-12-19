@@ -1,0 +1,37 @@
+[
+    {
+        "unit_type": "knight",
+        "weapon": "diamond",
+        "armour": "steel",
+        "level": 3,
+        "name": "Bonkers"
+    },
+    {
+        "unit_type": "swordman",
+        "weapon": "steel",
+        "armour": "wood",
+        "level": 4,
+        "name": "Snickerdoodle"
+    },
+    {
+        "unit_type": "swordman",
+        "weapon": "steel",
+        "armour": "wood",
+        "level": 3,
+        "name": "Humphrey Butterbean"
+    },
+    {
+        "unit_type": "archer",
+        "weapon": "diamond",
+        "armour": "wood",
+        "level": 1,
+        "name": "Tootsie"
+    },
+    {
+        "unit_type": "archer",
+        "weapon": "diamond",
+        "armour": "wood",
+        "level": 2,
+        "name": "Sassafras"
+    }
+]
