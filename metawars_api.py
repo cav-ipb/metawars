@@ -270,6 +270,7 @@ class Unit:
         assert armour in ARMOUR_TYPES, f"Invalid armour type '{armour}'"
         assert level > 0, "Level must be greater than 1"
 
+        self.id = None
         self.unit_type = unit_type
         self.weapon = weapon
         self.armour = armour
@@ -312,12 +313,14 @@ class Unit:
         return repr(self)
 
     def clone(self) -> Unit:
-        return Unit(
+        x = Unit(
             unit_type=self.unit_type,
             weapon=self.weapon,
             armour=self.armour,
             level=self.level,
         )
+        x.id = self.id
+        return x
 
     @staticmethod
     def load_army(path: Union[str, Path]) -> List[Unit]:
