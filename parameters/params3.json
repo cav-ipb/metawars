@@ -1,0 +1,17 @@
+{
+    "seed": 30,
+    "params": {
+        "output_file": "results/results_params3.data",
+        "iters": 100,
+        "population_size": 100,
+        "max_level": 100000,
+        "army_budget": 100000,
+        "alpha_s_min": 0.2, 
+        "alpha_s_max": 0.3, 
+        "alpha_r_min":0.4, 
+        "alpha_r_max":0.5, 
+        "alpha_m_min":0.1, 
+        "alpha_m_max":0.2
+    }
+    
+}

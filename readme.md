@@ -56,7 +56,7 @@ The we will randomly add units from $B$ to $A$ until
 
 #### Mutation operator
 
-Given an army $A$ we will generate a random mutation coefficient $c_m \in \{1,2,3\}$ and then generate a random value $\rho \in U(0,1)$ 
+Given an army $A$ we will generate a random mutation coefficient $c_m = \frac{ length(A) \cdot U(0,1)}{2} $ and then generate a random value $\rho \in U(0,1)$ 
 
 - If $\rho > 0.5$: we will take a random unit from $A$ and remove it, then for each type of unit we will get the most expensive version which cost does not exceed the cost of the removed unit and select a random one to replace it.
 - If $\rho \leq 0.5$: we will swap two random units and repeat this process the amount of times given by $c_m$.
@@ -69,7 +69,7 @@ The solution space was characterized by the components of a solution, in this ca
 
 #### Parameter adjustment
 
-For parameter adjustment I compared a linear growth vs an exponential growth function for the range of the algorithm rates for 100 iterations. Using the plots of the functions I adjusted the $r$ parameter of the exponential growth to 1.02
+For parameter adjustment I compared a linear growth vs an exponential growth function for the range of the algorithm rates for 100 iterations. Using the plots of the functions I adjusted the $r$ parameter of the exponential growth to 1.02 for 100.
 
 $linear = min\_x + (max\_x - min\_x) \times \frac{(i-1)}{(n-1)}$
 
@@ -79,42 +79,14 @@ $exponential = min\_x + (max\_x - min\_x) \times \frac{(r^i-1)}{(r^n-1)}$
 
 ## Results
 
-#### No Level Restriction
+The experiments took from 1 to 5 hours to finish (min: 1:23:30, max: 4:58:47), by analizing the results data the cause of this discrepancy is the army size of the different solutions. Since bigger armies make the simulation of the battle take longer.
 
+To check for the convergence of the algorithm I plotted the histogram of the armies scores, we can see for each one of the experiment runs that the scores are almost evenly distributed in the beginning but the distribution shows clear elitism by the end. 
 
+![score_histogram2](./img/score_histogram2.png)
 
-#### Level Restriction
+![score_histogram3](./img/score_histogram3.png)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+![score_histogram3](./img/score_histogram4.png)
 
  

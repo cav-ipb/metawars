@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from sortedcontainers import SortedList
 from tqdm import tqdm
-import os
+import os, sys, json, pprint
 
 
 from abc import ABC
@@ -111,7 +111,6 @@ class ArmyGeneticAlgorithm(GeneticAlgorithm):
             sel = random.randint(0, limit)
             
             unit = self.units_by_cost[sel][2]
-            unit.id = self.units_by_cost[sel][0]
 
             budget -= unit.cost
             army.append(unit)
@@ -137,7 +136,7 @@ class ArmyGeneticAlgorithm(GeneticAlgorithm):
                         
                     pbar.update(1)
 
-        lines = [ f"{results[i]}, " + ",".join(str(u.id)  for u in self.population[i]) + "\n" for i in range(len(results))]
+        lines = [ f"{results[i]}|" + "[" + ",".join(str(u.id)  for u in self.population[i]) + "]" + "\n" for i in range(len(results))]
 
         with open(self.file, 'a') as file:
             file.writelines(lines)
@@ -165,13 +164,14 @@ class ArmyGeneticAlgorithm(GeneticAlgorithm):
     
     def mutate(self, army):
         army = army.copy()
+        changes = int(len(army) * random.random() / 2) 
         if random.random() <= 0.5:
-            for i in range(3):
+            for i in range(changes):
                 j, k = np.random.randint(0,len(army)-1),np.random.randint(0,len(army)-1)
                 army[j], army[k] = army[k], army[j]
         else:
             budget = self.army_budget - army_cost(army)
-            for i in range(3):
+            for i in range(changes):
                 j = np.random.randint(0, len(army)-1)
                 budget += army[j].cost
                 limit = self.units_by_cost.bisect_key_right(budget) - 1
@@ -182,7 +182,7 @@ class ArmyGeneticAlgorithm(GeneticAlgorithm):
         return army
     
     def solve(self, output_file: str, max_level: int, army_budget: int, iters: int, population_size: int, alpha_s_min: float, alpha_s_max: float, alpha_r_min: float, alpha_r_max: float, alpha_m_min: float, alpha_m_max: float, function):
-        
+
         self.army_budget = army_budget
         self.file = output_file
 
@@ -199,6 +199,7 @@ class ArmyGeneticAlgorithm(GeneticAlgorithm):
                 for at in equipment_types:
                     for l in range(1,max_level+1):
                         u = Unit(ut, wt, at, l)
+                        u.id = c
                         if (u.cost) > army_budget:
                             break
                         units.append((c, u.cost, u, u.unit_type))
@@ -210,18 +211,29 @@ class ArmyGeneticAlgorithm(GeneticAlgorithm):
     
 
 
-expo_decay = lambda xmin, xmax, iterations, iter: xmin + (xmax - xmin) * (1.01 ** iter - 1) / (1.01 ** iterations - 1)
+expo_decay = lambda xmin, xmax, iterations, iter: xmin + (xmax - xmin) * (1.02 ** iter - 1) / (1.02 ** iterations - 1)
 linear_update = lambda xmin, xmax, iterations, iter: xmin + (xmax - xmin) * (iter - 1) / (iterations - 1)
 
 
 
 
-model = ArmyGeneticAlgorithm()
+if __name__ == '__main__':
+    param_file = sys.argv[1]
+    
+    with open(param_file, 'r') as f:
+        params = json.load(f)
 
-SEED = 42
-random.seed(SEED)
-np.random.seed(SEED)
-os.environ['PYTHONHASHSEED'] = str(SEED)
-res = model.solve(output_file="results_no_max_level.data", max_level=10000, army_budget=100000, iters=200, population_size=100, alpha_s_min=0.2, alpha_s_max=0.3, alpha_r_min=0.4, alpha_r_max=0.5, alpha_m_min=0.1, alpha_m_max=0.2, function=expo_decay)
+    model = ArmyGeneticAlgorithm()
 
+    print("==========================================")
+    print("Starting simulation with parameters:")
+    pprint.pprint(params)
+    print("==========================================")
+    print()
+    print()
 
+    SEED = params["seed"]
+    random.seed(SEED)
+    np.random.seed(SEED)
+    res = model.solve(**params["params"], function=expo_decay)
+    # res = model.solve(output_file="results_no_max_level.data", max_level=10000, army_budget=100000, iters=200, population_size=100, alpha_s_min=0.2, alpha_s_max=0.3, alpha_r_min=0.4, alpha_r_max=0.5, alpha_m_min=0.1, alpha_m_max=0.2, function=expo_decay)
